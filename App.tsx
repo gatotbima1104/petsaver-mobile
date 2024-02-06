@@ -1,118 +1,65 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
+  TouchableOpacity,
   View,
+  Text,
+  FlatList,
 } from 'react-native';
+import Title from './components/Title/Title';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import globalStyle from './assets/Style/globalStyle';
+import { Story } from './constants/UserStory';
+import UserStory from './components/Story/UserStory';
+import UserPost from './components/UserPost/UserPost';
+import { Post } from './constants/UserPost';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const App = () => {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+    <SafeAreaView>
+      <View style={globalStyle.postUser}>
+        <FlatList
+          ListHeaderComponent={<>
+            <View style={globalStyle.header}>
+              <Title title="Let's Explore" />
+              <TouchableOpacity style={globalStyle.iconMessage}>
+                <FontAwesomeIcon icon={faEnvelope} size={20} />
+                <View style={globalStyle.textHeader}>
+                  <Text style={{ fontSize: 10, color: 'white' }}>2</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+            <View style={globalStyle.statusUser}>
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                data={Story}
+                renderItem={({ item }) => (
+                  <UserStory
+                    key={item.id}
+                    profilImage={item.profilePicture}
+                    username={item.username}
+                  />
+                )}
+              />
+            </View>
+          </>}
+          showsVerticalScrollIndicator={false}
+          data={Post}
+          renderItem={({ item }) => (
+            <UserPost
+              key={item.id}
+              firstName={item.firstName}
+              location={item.location}
+              postImage={item.postImage}
+              profilePicture={item.profileImage}
+            />
+          )}
+        />
+      </View>
     </SafeAreaView>
   );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+};
 
 export default App;
